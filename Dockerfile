@@ -1,4 +1,4 @@
-FROM amazoncorretto:8 as build
+FROM amazoncorretto:17-alpine3.18
 
 RUN  yum install -y  wget unzip &&\
      mkdir findsecbugs && cd findsecbugs/ &&\
@@ -6,10 +6,5 @@ RUN  yum install -y  wget unzip &&\
      unzip findsecbugs-cli-1.12.0.zip &&\
      chmod +x findsecbugs.sh &&\
      rm -f findsecbugs-cli-1.12.0.zip
-
-FROM amazoncorretto:8
-
-COPY --from=build /findsecbugs /findsecbugs
-COPY run-findsecbugs-exit-zero.sh /findsecbugs
-RUN chmod +x /findsecbugs/run-findsecbugs-exit-zero.sh
+     
 ENTRYPOINT [ "/findsecbugs/findsecbugs.sh","-home","/findsecbugs",]
